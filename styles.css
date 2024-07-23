@@ -1,0 +1,136 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    position: relative;
+    overflow: hidden;
+    background-color: #121212;
+}
+
+body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('profile-pic.jpeg') no-repeat center center;
+    background-size: cover;
+    filter: blur(50px) brightness(0.3); /* Increased blur value */
+    z-index: -1;
+    animation: backgroundAnimation 20s linear infinite;
+}
+
+@keyframes backgroundAnimation {
+    0% { filter: blur(50px) brightness(0.3); }
+    50% { filter: blur(40px) brightness(0.4); }
+    100% { filter: blur(50px) brightness(0.3); }
+}
+
+.container {
+    text-align: center;
+    max-width: 600px;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: rgba(30, 30, 30, 0.6); /* Translucent background */
+    backdrop-filter: blur(10px); /* Frosted glass effect */
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.container:hover {
+    transform: scale(1.03); /* Slight zoom effect on hover */
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.7);
+}
+
+h1 {
+    margin-bottom: 20px;
+    font-size: 2.5em;
+    color: #ffffff;
+    transition: color 0.3s ease;
+}
+
+h1:hover {
+    color: #00d4ff; /* Change color on hover */
+}
+
+.link {
+    display: block;
+    margin: 10px 0;
+    padding: 15px;
+    text-decoration: none;
+    color: #ffffff;
+    background-color: #333333;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.link:hover {
+    background-color: #555555;
+    transform: scale(1.05) translateY(-5px); /* Scale and lift effect */
+}
+
+.link::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 300%;
+    height: 300%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1), transparent);
+    transition: width 0.4s ease, height 0.4s ease;
+    border-radius: 50%;
+    z-index: 0;
+    transform: translate(-50%, -50%);
+}
+
+.link:hover::before {
+    width: 0;
+    height: 0;
+}
+
+.link i {
+    margin-right: 10px;
+    z-index: 1; /* Ensure icon is on top */
+}
+
+.profile-picture {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-bottom: 20px;
+    object-fit: cover;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.profile-picture:hover {
+    transform: rotate(360deg); /* Rotate on hover */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Footer styling */
+.footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+    background: rgba(30, 30, 30, 0.6); /* Slightly translucent background */
+    color: #ffffff;
+    font-size: 0.8em;
+    border-top: 1px solid rgba(255, 255, 255, 0.3); /* Thin border for subtle separation */
+    z-index: 1;
+    box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.3); /* Subtle shadow */
+}
+
+/* To ensure the body takes the full height */
+html, body {
+    height: 100%;
+}
