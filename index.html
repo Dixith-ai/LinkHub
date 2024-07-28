@@ -31,12 +31,44 @@
                 <a class="link" href="https://rb.gy/u31az3" target="_blank">
                     <i class="fas fa-globe"></i> Portfolio
                 </a>
+                <a class="link" href="#" onclick="showModal()">
+                    <i class="fas fa-envelope"></i> Gmail
+                </a>
             </div>
         </div>
     </div>
     <footer class="footer">
         <p>&copy; 2024 Dixith Adithya. All rights reserved.</p>
     </footer>
-    
+
+    <!-- Modal -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="hideModal()">&times;</span>
+            <p>Email address copied to clipboard!</p>
+            <p>31dixithadithya@gmail.com</p>
+        </div>
+    </div>
+
+    <script>
+        function showModal() {
+            const email = '31dixithadithya@gmail.com';
+            navigator.clipboard.writeText(email).then(() => {
+                document.getElementById('myModal').style.display = 'block';
+            });
+        }
+
+        function hideModal() {
+            document.getElementById('myModal').style.display = 'none';
+        }
+
+        // Close the modal when the user clicks anywhere outside of it
+        window.onclick = function(event) {
+            const modal = document.getElementById('myModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
 </body>
 </html>
