@@ -1,8 +1,7 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export const useKeyboardNavigation = () => {
   const [focusedIndex, setFocusedIndex] = useState(-1);
-  const elementsRef = useRef<(HTMLElement | null)[]>([]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {

@@ -4,15 +4,7 @@ import CursorEffects from "@/components/CursorEffects";
 import ScrollProgress from "@/components/ScrollProgress";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useKeyboardNavigation } from "@/hooks/useKeyboardNavigation";
-import { useMagneticEffect } from "@/hooks/useMagneticEffect";
 
-interface Project {
-  name: string;
-  description: string;
-  url: string;
-  emoji: string;
-  note: string;
-}
 /*
 const projects: Project[] = [
   {
@@ -60,8 +52,6 @@ const Projects = () => {
   // Keyboard navigation
   useKeyboardNavigation();
   
-  // Magnetic effects
-  const magneticRef = useMagneticEffect();
 
   return (
     <div className="min-h-screen px-4 py-12 relative overflow-hidden">
@@ -81,7 +71,7 @@ const Projects = () => {
       
       <div className="w-full max-w-5xl mx-auto space-y-12 relative z-10">
         {/* Header */}
-        <div ref={headerRef} className={`space-y-8 scroll-reveal ${headerVisible ? 'revealed' : ''}`}>
+        <div ref={headerRef as React.RefObject<HTMLDivElement>} className={`space-y-8 scroll-reveal ${headerVisible ? 'revealed' : ''}`}>
           <Link
             to="/"
             className="glass-button magnetic inline-flex items-center gap-3 text-foreground/60 hover:text-foreground transition-all duration-300 group backdrop-blur-sm w-fit breathing"
@@ -101,8 +91,8 @@ const Projects = () => {
         </div>
 
         {/* Projects Grid */}
-        <div ref={projectsRef} className={`grid gap-6 md:grid-cols-2 scroll-reveal ${projectsVisible ? 'revealed' : ''}`}>
-          {projects.map((project, index) => (
+        <div ref={projectsRef as React.RefObject<HTMLDivElement>} className={`grid gap-6 md:grid-cols-2 scroll-reveal ${projectsVisible ? 'revealed' : ''}`}>
+          {[].map((project: any, index: number) => (
             <a
               key={project.name}
               href={project.url}

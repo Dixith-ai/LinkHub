@@ -1,11 +1,10 @@
 import { Link } from "react-router-dom";
-import { MessageCircle, Instagram, Github, Linkedin, Mail, FolderGit2, Sparkles, Phone } from "lucide-react";
+import { MessageCircle, Instagram, Github, Linkedin, Mail, FolderGit2, Phone } from "lucide-react";
 import profileImage from "../../image/dp.jpg";
 import CursorEffects from "@/components/CursorEffects";
 import ScrollProgress from "@/components/ScrollProgress";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useKeyboardNavigation } from "@/hooks/useKeyboardNavigation";
-import { useMagneticEffect } from "@/hooks/useMagneticEffect";
 import { useState, useEffect } from "react";
 
 const socialLinks = [
@@ -53,8 +52,6 @@ const socialLinks = [
 
 const Index = () => {
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [isTyping, setIsTyping] = useState(false);
   
   // Scroll reveal hooks
   const [profileRef, profileVisible] = useScrollReveal();
@@ -64,27 +61,12 @@ const Index = () => {
   // Keyboard navigation
   useKeyboardNavigation();
   
-  // Magnetic effects
-  const magneticRef = useMagneticEffect();
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
 
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    };
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
-
-  useEffect(() => {
-    setIsTyping(true);
-    const timer = setTimeout(() => setIsTyping(false), 3000);
-    return () => clearTimeout(timer);
-  }, []);
 
   const getGreeting = () => {
     const hour = currentTime.getHours();
@@ -93,7 +75,7 @@ const Index = () => {
     return "Good Evening";
   };
 
-  const copyToClipboard = async (text: string, type: string) => {
+  const copyToClipboard = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
       // Silent copy - no visual feedback as requested
@@ -122,7 +104,7 @@ const Index = () => {
       
       <main className="w-full max-w-2xl mx-auto space-y-12 relative z-10">
         {/* Profile Section */}
-        <div ref={profileRef} className={`text-center space-y-8 scroll-reveal ${profileVisible ? 'revealed' : ''}`}>
+        <div ref={profileRef as React.RefObject<HTMLDivElement>} className={`text-center space-y-8 scroll-reveal ${profileVisible ? 'revealed' : ''}`}>
           <div className="flex justify-center mb-6">
             <div className="relative group">
               <img
@@ -168,7 +150,7 @@ const Index = () => {
         </div>
 
         {/* Social Links */}
-        <div ref={socialRef} className={`space-y-3 scroll-reveal ${socialVisible ? 'revealed' : ''}`}>
+        <div ref={socialRef as React.RefObject<HTMLDivElement>} className={`space-y-3 scroll-reveal ${socialVisible ? 'revealed' : ''}`}>
           {socialLinks.map((link, index) => (
             <a
               key={link.name}
@@ -182,7 +164,7 @@ const Index = () => {
               onClick={(e) => {
                 if (link.copyText && link.copyType) {
                   e.preventDefault();
-                  copyToClipboard(link.copyText, link.copyType);
+                  copyToClipboard(link.copyText);
                   // Still open the URL after copying
                   window.open(link.url, '_blank');
                 }
@@ -195,7 +177,7 @@ const Index = () => {
         </div>
 
         {/* Projects Button */}
-        <div ref={projectsRef} className={`pt-8 scroll-reveal ${projectsVisible ? 'revealed' : ''}`}>
+        <div ref={projectsRef as React.RefObject<HTMLDivElement>} className={`pt-8 scroll-reveal ${projectsVisible ? 'revealed' : ''}`}>
           <Link
             to="/projects"
             className="glass-button magnetic flex items-center justify-center gap-4 bg-gradient-to-r from-primary/20 to-primary-vibrant/20 hover:from-primary/30 hover:to-primary-vibrant/30 border-primary/40 hover:border-primary/60 group relative overflow-hidden w-full breathing"
