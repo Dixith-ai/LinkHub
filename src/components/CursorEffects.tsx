@@ -4,12 +4,15 @@ const CursorEffects = () => {
   const cursorRef = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
   const glowRef = useRef<HTMLDivElement>(null);
+  const trailRef = useRef<HTMLDivElement>(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isHovering, setIsHovering] = useState(false);
   const [isClicking, setIsClicking] = useState(false);
+  const [trail, setTrail] = useState<Array<{x: number, y: number, id: number}>>([]);
   const animationFrameRef = useRef<number>();
+  const trailIdRef = useRef(0);
 
-  // Throttled mouse move handler using requestAnimationFrame
+  // Enhanced mouse move handler with trail effects
   const handleMouseMove = useCallback((e: MouseEvent) => {
     if (animationFrameRef.current) {
       cancelAnimationFrame(animationFrameRef.current);
@@ -17,6 +20,12 @@ const CursorEffects = () => {
     
     animationFrameRef.current = requestAnimationFrame(() => {
       setMousePosition({ x: e.clientX, y: e.clientY });
+      
+      // Add trail effect
+      setTrail(prev => {
+        const newTrail = [...prev, { x: e.clientX, y: e.clientY, id: trailIdRef.current++ }];
+        return newTrail.slice(-8); // Keep only last 8 trail points
+      });
     });
   }, []);
 
@@ -70,48 +79,119 @@ const CursorEffects = () => {
 
   return (
     <>
-      {/* Main cursor dot - optimized with will-change and transform3d */}
-      <div
-        ref={cursorRef}
-        className="fixed w-2 h-2 bg-primary rounded-full pointer-events-none z-50 mix-blend-difference"
-        style={{
-          left: mousePosition.x - 4,
-          top: mousePosition.y - 4,
-          transform: `translate3d(0, 0, 0) ${isClicking ? 'scale(0.5)' : 'scale(1)'}`,
-          opacity: isHovering ? 1 : 0.8,
-          willChange: 'transform, opacity',
-          transition: 'opacity 0.2s ease-out, transform 0.1s ease-out',
-        }}
-      />
+      {/* Magical trail effect */}
+      {trail.map((point, index) => (
+        <div
+          key={point.id}
+          className="fixed w-1 h-1 bg-primary rounded-full pointer-events-none z-30"
+          style={{
+            left: point.x - 2,
+            top: point.y - 2,
+            opacity: (index + 1) / trail.length * 0.8,
+            transform: `translate3d(0, 0, 0) scale(${0.3 + (index / trail.length) * 0.7})`,
+            willChange: 'transform, opacity',
+            transition: 'all 0.1s ease-out',
+          }}
+        />
+      ))}
       
-      {/* Cursor ring - optimized */}
+      {/* Pulsing outer ring with animation */}
       <div
         ref={ringRef}
-        className="fixed w-8 h-8 border border-primary/30 rounded-full pointer-events-none z-40"
+        className="fixed w-12 h-12 border border-primary/40 rounded-full pointer-events-none z-40"
         style={{
-          left: mousePosition.x - 16,
-          top: mousePosition.y - 16,
-          transform: `translate3d(0, 0, 0) ${isHovering ? 'scale(1.5)' : 'scale(1)'}`,
-          opacity: isHovering ? 0.6 : 0.3,
+          left: mousePosition.x - 24,
+          top: mousePosition.y - 24,
+          transform: `translate3d(0, 0, 0) ${isHovering ? 'scale(2)' : 'scale(1)'}`,
+          opacity: isHovering ? 0.8 : 0.4,
           willChange: 'transform, opacity',
-          transition: 'opacity 0.3s ease-out, transform 0.2s ease-out',
+          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+          animation: 'pulse 2s ease-in-out infinite',
         }}
       />
       
-      {/* Subtle glow effect - optimized with reduced blur */}
+      {/* Rotating inner ring */}
       <div
-        ref={glowRef}
-        className="fixed w-16 h-16 bg-primary/10 rounded-full pointer-events-none z-30"
+        className="fixed w-6 h-6 border border-primary/60 rounded-full pointer-events-none z-45"
         style={{
-          left: mousePosition.x - 32,
-          top: mousePosition.y - 32,
-          transform: `translate3d(0, 0, 0) ${isHovering ? 'scale(1.2)' : 'scale(0.8)'}`,
-          opacity: isHovering ? 0.4 : 0.1,
+          left: mousePosition.x - 12,
+          top: mousePosition.y - 12,
+          transform: `translate3d(0, 0, 0) ${isHovering ? 'scale(1.5) rotate(180deg)' : 'scale(1) rotate(0deg)'}`,
+          opacity: isHovering ? 0.9 : 0.6,
           willChange: 'transform, opacity',
-          transition: 'opacity 0.4s ease-out, transform 0.3s ease-out',
-          filter: 'blur(4px)', // Reduced blur for better performance
+          transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+          animation: 'spin 3s linear infinite',
         }}
       />
+      
+      {/* Main cursor dot with glow */}
+      <div
+        ref={cursorRef}
+        className="fixed w-3 h-3 bg-primary rounded-full pointer-events-none z-50 mix-blend-difference"
+        style={{
+          left: mousePosition.x - 6,
+          top: mousePosition.y - 6,
+          transform: `translate3d(0, 0, 0) ${isClicking ? 'scale(0.3)' : isHovering ? 'scale(1.5)' : 'scale(1)'}`,
+          opacity: isHovering ? 1 : 0.9,
+          willChange: 'transform, opacity',
+          transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+          boxShadow: isHovering 
+            ? '0 0 20px hsl(var(--primary)), 0 0 40px hsl(var(--primary) / 0.5)' 
+            : '0 0 10px hsl(var(--primary) / 0.3)',
+        }}
+      />
+      
+      {/* Magical glow effect with gradient */}
+      <div
+        ref={glowRef}
+        className="fixed w-20 h-20 rounded-full pointer-events-none z-30"
+        style={{
+          left: mousePosition.x - 40,
+          top: mousePosition.y - 40,
+          transform: `translate3d(0, 0, 0) ${isHovering ? 'scale(1.5)' : 'scale(0.8)'}`,
+          opacity: isHovering ? 0.6 : 0.2,
+          willChange: 'transform, opacity',
+          transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+          background: 'radial-gradient(circle, hsl(var(--primary) / 0.3) 0%, hsl(var(--primary-vibrant) / 0.2) 50%, transparent 100%)',
+          filter: 'blur(8px)',
+          animation: isHovering ? 'pulse 1.5s ease-in-out infinite' : 'none',
+        }}
+      />
+      
+      {/* Floating particles around cursor */}
+      {isHovering && (
+        <>
+          {[...Array(3)].map((_, i) => (
+            <div
+              key={i}
+              className="fixed w-1 h-1 bg-primary rounded-full pointer-events-none z-35"
+              style={{
+                left: mousePosition.x + (Math.cos(i * 2.09) * 20) - 2,
+                top: mousePosition.y + (Math.sin(i * 2.09) * 20) - 2,
+                opacity: 0.7,
+                animation: `float ${1 + i * 0.5}s ease-in-out infinite`,
+                animationDelay: `${i * 0.2}s`,
+                willChange: 'transform, opacity',
+              }}
+            />
+          ))}
+        </>
+      )}
+      
+      {/* Click ripple effect */}
+      {isClicking && (
+        <div
+          className="fixed w-16 h-16 border-2 border-primary rounded-full pointer-events-none z-45"
+          style={{
+            left: mousePosition.x - 32,
+            top: mousePosition.y - 32,
+            transform: 'translate3d(0, 0, 0) scale(0)',
+            opacity: 1,
+            willChange: 'transform, opacity',
+            animation: 'ripple 0.6s ease-out forwards',
+          }}
+        />
+      )}
     </>
   );
 };
