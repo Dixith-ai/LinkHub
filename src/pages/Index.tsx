@@ -86,7 +86,7 @@ const Index = () => {
 
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-4 py-16 relative overflow-hidden">
+    <div className="min-h-screen min-h-dvh flex flex-col items-center justify-center px-4 py-8 md:py-16 relative overflow-hidden">
       <ScrollProgress />
       <CursorEffects />
       
@@ -110,7 +110,7 @@ const Index = () => {
               <img
                 src={profileImage}
                 alt="Dixith Adithya - Developer & Tech Enthusiast"
-                className="w-44 h-44 md:w-52 md:h-52 rounded-full object-cover profile-glow transition-all duration-500 group-hover:scale-105 breathing"
+                className="w-32 h-32 sm:w-40 sm:h-40 md:w-52 md:h-52 rounded-full object-cover profile-glow transition-all duration-500 group-hover:scale-105 breathing"
                 onMouseMove={(e) => {
                   const rect = e.currentTarget.getBoundingClientRect();
                   const centerX = rect.left + rect.width / 2;
@@ -134,15 +134,15 @@ const Index = () => {
           
           <div className="space-y-6">
             <div className="relative inline-block">
-              <h1 className="text-5xl md:text-7xl font-bold tracking-tight leading-tight modern-name">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight leading-tight modern-name">
                 Dixith Adithya
               </h1>
             </div>
             <div className="space-y-4">
-              <p className="text-2xl md:text-3xl text-foreground font-medium tracking-wider animate-fade-in italic" style={{ animationDelay: "0.2s" }}>
+              <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-foreground font-medium tracking-wider animate-fade-in italic" style={{ animationDelay: "0.2s" }}>
                 śūnye gatiḥ
               </p>
-              <p className="text-lg text-foreground/50 font-medium">
+              <p className="text-base sm:text-lg text-foreground/50 font-medium">
                 {getGreeting()}! 👋
               </p>
             </div>
